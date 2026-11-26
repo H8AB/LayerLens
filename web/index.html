@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14283a">
+  <title>拆开看 · 原理与产业拆解</title>
+  <meta name="description" content="把抽象信息整理成一张可高清缩放的图文解释图。">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <div>
+          <strong>拆开看</strong>
+          <small>Take It Apart</small>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button id="download-json" type="button" class="button subtle">下载可编辑稿</button>
+        <button id="download-svg" type="button" class="button primary">导出高清 SVG</button>
+        <button id="download-png" type="button" class="button primary-alt">导出 2× PNG</button>
+      </div>
+    </header>
+    <main class="workspace">
+      <section class="editor-panel" aria-labelledby="editor-title">
+        <div class="panel-heading">
+          <div>
+
+            <h1 id="editor-title">编辑拆解图稿</h1>
+            <p>粘贴 AI 生成的图文 JSON，右侧立即排版成一张图。</p>
+          </div>
+        </div>
+        <div class="example-row">
+          <label for="example-select">试用案例</label>
+          <select id="example-select">
+            <option value="gpu">GPU 的并行运算</option>
+            <option value="robotics">工业机器人产业链</option>
+          </select>
+        </div>
+        <label class="editor-label" for="spec">可编辑图文数据</label>
+        <textarea id="spec" spellcheck="false" aria-describedby="format-help"></textarea>
+        <p id="format-help" class="format-help">修改图稿即可更新预览。点击图底的资料索引可查看依据。</p>
+        <div class="editor-footer">
+          <span id="status" role="status" aria-live="polite"></span>
+          <button id="copy-prompt" type="button" class="text-button">复制 AI 生成指令</button>
+        </div>
+      </section>
+      <section class="preview-panel" aria-labelledby="preview-title">
+        <div class="preview-toolbar">
+          <div>
+
+            <h2 id="preview-title">图文解释图</h2>
+          </div>
+          <div class="preview-controls">
+            <span id="map-stats"></span>
+            <button id="zoom-out" type="button" class="icon-button" aria-label="缩小">−</button>
+            <span id="zoom-label">100%</span>
+            <button id="zoom-in" type="button" class="icon-button" aria-label="放大">+</button>
+            <button id="fit" type="button" class="fit-button">适合窗口</button>
+          </div>
+        </div>
+        <div id="preview-scroll" class="preview-scroll">
+          <div id="map" class="map" aria-live="polite"></div>
+        </div>
+        <div class="preview-hint">SVG 适合放大阅读。PNG 以两倍宽度导出。</div>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>

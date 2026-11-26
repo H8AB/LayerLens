@@ -1,0 +1,28 @@
+{
+  "mode":"industry",
+  "title":"一台机械臂，怎样变成焊接产能？",
+  "scope":"工业机器人产业链 · 弧焊工作站",
+  "lead":"沿着一件焊接工件追踪交付物。减速器、机器人和整套工作站各解决一个不同的问题。",
+  "figure":"从关节部件到可投产的工作站",
+  "relation":"交付",
+  "stages":[
+    {"name":"部件供应商","caption":"关节传动","detail":"提供精密减速器，配合电机传递关节所需的转速和转矩。","visual":{"type":"symbol","symbol":"gear"}},
+    {"name":"机器人制造商","caption":"受控运动","detail":"把机械结构、驱动和控制器组成能够按轨迹运动的机器人。","visual":{"type":"symbol","symbol":"arm"}},
+    {"name":"系统集成商","caption":"焊接工作站","detail":"匹配焊源、焊枪、夹具和防护，编程并调试整站。","visual":{"type":"symbol","symbol":"cell"}},
+    {"name":"制造工厂","caption":"合格工件","detail":"按产品要求验证焊缝质量与生产节拍，并安排日常维护。","visual":{"type":"symbol","symbol":"weld"}}
+  ],
+  "feedback":"工厂提出工件尺寸、焊缝位置和目标节拍，集成商据此选型与布置。",
+  "notes":[
+    {"title":"部件提供什么能力？","body":"减速器可用于机器人关节。关节的运动表现还取决于电机、传感与控制，单个部件只是整机性能的一项因素。","refs":[1,2]},
+    {"title":"为什么要单列集成？","body":"机械臂能够到达一个位置，焊接还需要可靠地定位工件，并让焊枪、焊接电源及工装协调工作。","refs":[2,3]},
+    {"title":"价值如何被验证？","body":"可用同一个工件做试焊，检查接头质量并记录完整循环用时。工厂据此判断工作站能否满足产线要求。","refs":[3,4]}
+  ],
+  "insight":{"title":"夹具偏一点，影响会传到哪一层？","body":"工件偏移会使实际焊缝偏离程序轨迹。集成商可改善定位或加入寻位功能，同时评估额外动作对节拍的影响。","refs":[3]},
+  "boundary":"按交付角色划分，同一家企业可以兼任制造与集成。焊源、工装等也可直接供给集成商。范围限于工业弧焊场景。",
+  "sources":[
+    {"label":"Harmonic Drive · 关节减速器","url":"https://www.hds.co.jp/english/company/business/example/"},
+    {"label":"ABB · 工业机器人术语","url":"https://global.abb/content/dam/abb/global/group/investors/documents/ir-events/2017/Glossary%20of%20technical%20terms%20-%20abb-innovation-technology-day%20-%202017.pdf"},
+    {"label":"Lincoln Electric · 焊缝寻位","url":"https://qacd10.lincolnelectric.com/en-GB/Welding-and-Cutting-Resource-Center/Process-and-Theory/Intelligent-Robotic-Arc-Sensing"},
+    {"label":"Lincoln Electric · 应用案例","url":"https://ch-delivery.lincolnelectric.com/api/public/content/20f948ba18cf4c10a276d54630974fb1?v=1b992607"}
+  ]
+}
