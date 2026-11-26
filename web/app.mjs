@@ -103,7 +103,7 @@ document.getElementById('download-png').addEventListener('click', () => {
 });
 document.getElementById('copy-prompt').addEventListener('click', async () => {
   try { await navigator.clipboard.writeText(webPrompt); notify('已复制 AI 生成指令'); }
-  catch { download(new Blob([webPrompt], { type: 'text/plain;charset=utf-8' }), '拆开看-网页指令.txt'); notify('已提供可复制的指令文件'); }
+  catch { download(new Blob([webPrompt], { type: 'text/plain;charset=utf-8' }), '图个明白-网页指令.txt'); notify('已提供可复制的指令文件'); }
 });
 
 setExample('gpu');

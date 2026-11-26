@@ -1,6 +1,6 @@
-# 拆开看
+# LayerLens
 
-把技术机制、抽象知识与产业分工做成一张可缩放的专业图解。图中用带含义的箭头连接对象，给出一个具体情境、值得追问的瓶颈、适用条件与可追溯的资料。当前提供运行原理和产业链两种拆法。
+LayerLens 的中文名是「图个明白」。它把技术机制、抽象知识与产业分工做成一张可缩放的专业图解。图中用带含义的箭头连接对象，给出一个具体情境、值得追问的瓶颈、适用条件与可追溯的资料。当前提供运行原理和产业链两种拆法。
 
 ## 从一张图开始
 
@@ -11,13 +11,13 @@
 
 ## 使用
 
-**网页对话**　复制 [生成指令](releases/网页对话指令.txt) 到 AI 对话，附上你的原文、链接或问题。将生成的 JSON 粘贴到[离线查看器](releases/拆开看.html)。下载该 HTML 后双击即可打开，支持缩放、SVG 与 3200 像素宽 PNG 导出。
+**网页对话**　复制 [生成指令](releases/layerlens-web-prompt.txt) 到 AI 对话，附上你的原文、链接或问题。将生成的 JSON 粘贴到[离线查看器](releases/LayerLens.html)。下载该 HTML 后双击即可打开，支持缩放、SVG 与 3200 像素宽 PNG 导出。
 
 **Codex / Claude Code**　将仓库中的 `skill/strata-atlas/` 整个目录复制到项目的 `.agents/skills/` 或 `.claude/skills/`。用中文描述主题，或用 `$strata-atlas`（Codex）和 `/strata-atlas`（Claude Code）指定技能。
 
-**Claude 网页端 / WorkBuddy**　在各自技能管理页导入 [Claude 通用包](releases/strata-atlas-0.2.1-agent-skills.zip) 或 [WorkBuddy 专用包](releases/strata-atlas-0.2.1-workbuddy.zip)。Claude 自定义技能需启用相应的执行与文件功能，企业环境取决于管理员设置。
+**Claude 网页端 / WorkBuddy**　在各自技能管理页导入 [Claude 通用包](releases/layerlens-0.2.2-agent-skills.zip) 或 [WorkBuddy 专用包](releases/layerlens-0.2.2-workbuddy.zip)。Claude 自定义技能需启用相应的执行与文件功能，企业环境取决于管理员设置。
 
-可以这样提问：“用拆开看讲讲工业机器人产业链。以弧焊工作站为例，在图上注明各方的交付物、工厂的验收条件，以及一个会传导到下游的问题。”
+可以这样提问：“用「图个明白」讲讲工业机器人产业链。以弧焊工作站为例，在图上注明各方的交付物、工厂的验收条件，以及一个会传导到下游的问题。”
 
 ## 开发与兼容
 

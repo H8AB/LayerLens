@@ -112,7 +112,7 @@ export function renderSvg(input) {
   if(input?.layout==='flow'||input?.layout==='grid')return renderClassic(input);
   const s=validate(input),p=[];
   const kind=s.mode==='mechanism'?'运行原理':'产业链条';
-  p.push(rect(56,46,8,26,'#bc7042'),text(78,67,'拆开看',22,ink,700),text(170,66,'TAKE IT APART',15,secondary,500,'font-family="'+mono+'"'),text(1544,66,kind,20,ink,600,'text-anchor="end"'));
+  p.push(rect(56,46,8,26,'#bc7042'),text(78,67,'图个明白',22,ink,700),text(188,66,'LayerLens',15,secondary,500,'font-family="'+mono+'"'),text(1544,66,kind,20,ink,600,'text-anchor="end"'));
   p.push(path('M56 91H1544','#adbbb4',1));
   let y=para(p,56,174,s.title,1475,59,ink,750);
   y=para(p,60,y-12,s.lead,1470,25,secondary);

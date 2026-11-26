@@ -1,4 +1,4 @@
 interface:
-  display_name: "拆开看"
+  display_name: "图个明白"
   short_description: "把技术原理和产业链拆成一张可放大、有出处的图"
   default_prompt: "用 $strata-atlas 把这个主题拆成一张图，说明运作原理或各环节的交付物。"

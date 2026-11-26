@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skill" / "strata-atlas"
 WEB = ROOT / "web"
 RELEASES = ROOT / "releases"
-VERSION = "0.2.1"
+VERSION = "0.2.2"
 
 
 def examples():
@@ -24,13 +24,13 @@ def examples():
 
 def build_viewer(data):
     instruction = (SKILL / "SKILL.md").read_text().split("---", 2)[2].strip()
-    prompt = ("请用「拆开看」把我接下来给出的内容整理成一张高清拆解图。\n\n"
+    prompt = ("请用「图个明白」把我接下来给出的内容整理成一张高清拆解图。\n\n"
               + instruction.split("## 制作与交付")[0]
               + "\n直接按下面的字段说明提供完整 JSON，以便粘入查看器。\n\n"
               + (SKILL / "references/format.md").read_text()
               + "\n参考下面的有效图稿格式。主题、图形和依据按实际材料选择。\n"
               + json.dumps(data["gpu"], ensure_ascii=False, indent=2))
-    (RELEASES / "网页对话指令.txt").write_text(prompt)
+    (RELEASES / "layerlens-web-prompt.txt").write_text(prompt)
     module = ("export const examples = " + json.dumps(data, ensure_ascii=False, indent=2)
               + ";\nexport const webPrompt = " + json.dumps(prompt, ensure_ascii=False) + ";\n")
     (WEB / "examples.mjs").write_text(module)
@@ -43,18 +43,18 @@ def build_viewer(data):
     html = (WEB / "index.html").read_text()
     html = html.replace('<link rel="stylesheet" href="./style.css">', '<style>' + (WEB / "style.css").read_text() + '</style>')
     html = html.replace('<script type="module" src="./app.mjs"></script>', '<script type="module">\n' + js + '\n</script>')
-    (RELEASES / "拆开看.html").write_text(html)
+    (RELEASES / "LayerLens.html").write_text(html)
 
 
 def build_package(platform):
-    metadata = """display_name: 拆开看
-display_name_en: Take It Apart
+    metadata = """display_name: 图个明白
+display_name_en: LayerLens
 description_zh: 将技术机制与产业链拆成一张有依据的高清图鉴。
 description_en: Visual teardowns of technical mechanisms and industrial value chains.
-author: Take It Apart contributors
-version: "0.2.1"
+author: LayerLens contributors
+version: "0.2.2"
 """
-    with ZipFile(RELEASES / f"strata-atlas-{VERSION}-{platform}.zip", "w", ZIP_DEFLATED) as z:
+    with ZipFile(RELEASES / f"layerlens-{VERSION}-{platform}.zip", "w", ZIP_DEFLATED) as z:
         for p in sorted(SKILL.rglob("*")):
             if not p.is_file() or p.name.startswith("."):
                 continue

@@ -1,10 +1,10 @@
 ---
 name: strata-atlas
-description: 拆开看 (Take It Apart) creates a single zoomable, sourced visual teardown of technical mechanisms and industry value chains. Use for requests such as 拆解 GPU 运作原理、机器人产业链、系统工作机制 or a professional illustrated explanation of how a system works and who delivers what.
+description: 图个明白 (LayerLens) creates a single zoomable, sourced visual teardown of technical mechanisms and industry value chains. Use for requests such as 拆解 GPU 运作原理、机器人产业链、系统工作机制 or a professional illustrated explanation of how a system works and who delivers what.
 license: MIT
 ---
 
-# 拆开看
+# 图个明白
 
 为有背景知识但初次接触此主题的读者制作一张可放大的专业图解。根据用户指定的对象、语言与深度调整表达。成品包括 SVG 主图和可继续修改的 JSON 稿。
 
