@@ -1,1 +1,1 @@
-将工业机器人产业链拆给制造业新入行的同事看。以一套弧焊工作站为例，说清谁交付什么、谁承担集成，以及下游的工艺要求怎么传回上游。
+Explain the industrial robotics value chain to a new manufacturing colleague. Use an arc-welding cell to show who supplies what, what the integrator contributes, and how factory requirements affect upstream design.

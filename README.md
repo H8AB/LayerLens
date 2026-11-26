@@ -1,27 +1,37 @@
 # LayerLens
 
-LayerLens 的中文名是「图个明白」。它把技术机制、抽象知识与产业分工做成一张可缩放的专业图解。图中用带含义的箭头连接对象，给出一个具体情境、值得追问的瓶颈、适用条件与可追溯的资料。当前提供运行原理和产业链两种拆法。
+LayerLens turns a question about a technical system or an industry into one zoomable, source-linked diagram. For a mechanism, follow an input through the parts that transform it. For a value chain, follow a deliverable across suppliers and see how customer requirements travel back upstream.
 
-## 从一张图开始
+[简体中文](README.zh-CN.md)
 
-- [GPU 怎样同时算出许多结果？](examples/gpu.svg) 追踪向量加法从一个网格到一个线程束，并核算一次加法需要的逻辑读写量。[可编辑稿](examples/gpu.json)
-- [一台机械臂，怎样变成焊接产能？](examples/robotics.svg) 从关节减速器、机器人、工作站走到合格工件，再沿需求回传看选型。[可编辑稿](examples/robotics.json)
+## Examples
 
-每张图底部的资料索引可在独立 SVG 的浏览器页面点击。完整网址也保存在 JSON 内。
+[![A CUDA grid, block and warp illustrated with a vector addition example](examples/gpu.png)](examples/gpu.svg)
 
-## 使用
+**How does a GPU add 4,096 pairs of numbers?** Zoom from a grid to a single warp, trace thread 5 in block 2 to element 261, and see why memory bandwidth can limit throughput. [Vector diagram](examples/gpu.svg) · [Editable data](examples/gpu.json)
 
-**网页对话**　复制 [生成指令](releases/layerlens-web-prompt.txt) 到 AI 对话，附上你的原文、链接或问题。将生成的 JSON 粘贴到[离线查看器](releases/LayerLens.html)。下载该 HTML 后双击即可打开，支持缩放、SVG 与 3200 像素宽 PNG 导出。
+**How does a robot arm become a welding cell?** Follow the component maker, robot maker, integrator and factory. The diagram traces a fixture error back to the weld path and shows how the fix can affect cycle time. [View the diagram](examples/robotics.png) · [Vector diagram](examples/robotics.svg) · [Editable data](examples/robotics.json)
 
-**Codex / Claude Code**　将仓库中的 `skill/strata-atlas/` 整个目录复制到项目的 `.agents/skills/` 或 `.claude/skills/`。用中文描述主题，或用 `$strata-atlas`（Codex）和 `/strata-atlas`（Claude Code）指定技能。
+## Try it in a browser
 
-**Claude 网页端 / WorkBuddy**　在各自技能管理页导入 [Claude 通用包](releases/layerlens-0.2.2-agent-skills.zip) 或 [WorkBuddy 专用包](releases/layerlens-0.2.2-workbuddy.zip)。Claude 自定义技能需启用相应的执行与文件功能，企业环境取决于管理员设置。
+1. Download [the offline viewer](https://github.com/H8AB/LayerLens/releases/download/v0.3.0/LayerLens.html) and open it in a browser. Both examples are included.
+2. Copy [the web prompt](releases/layerlens-web-prompt.txt) into your AI chat and add a question or source material.
+3. Paste the resulting JSON into the viewer. Edit the text, zoom in, or export an SVG or a 3,200-pixel-wide PNG.
 
-可以这样提问：“用「图个明白」讲讲工业机器人产业链。以弧焊工作站为例，在图上注明各方的交付物、工厂的验收条件，以及一个会传导到下游的问题。”
+The viewer runs locally. It opens in English. Select **简体中文** for Chinese controls, examples and prompt.
 
-## 开发与兼容
+## Install the skill
 
-发布包自带无第三方依赖的 Node.js 渲染器。使用 Node.js 18+ 与 Python 3.9+ 重建。命令在仓库根目录运行。
+- **Codex** — Copy [the skill folder](skill/strata-atlas) into your project's `.agents/skills/` directory. Invoke it with `$strata-atlas`.
+- **Claude Code** — Copy the same folder into `.claude/skills/` and use `/strata-atlas`.
+- **Claude web** — Upload the [Agent Skills ZIP](https://github.com/H8AB/LayerLens/releases/download/v0.3.0/layerlens-0.3.0-agent-skills.zip) in Customize → Skills. Your workspace needs to permit custom skills and file creation.
+- **WorkBuddy** — In the skills manager, choose Add → Upload and select the [WorkBuddy ZIP](https://github.com/H8AB/LayerLens/releases/download/v0.3.0/layerlens-0.3.0-workbuddy.zip).
+
+The skill ID is `strata-atlas` for compatibility with earlier versions. Try asking *“Trace a welding cell from joint components to the finished weld. What changes if the fixture shifts?”*
+
+## Render and develop
+
+Use Node.js 18+ for the renderer and Python 3.9+ to rebuild the distributions. Both use their standard libraries.
 
 ```sh
 node skill/strata-atlas/scripts/render.mjs examples/gpu.json gpu.svg
@@ -29,6 +39,6 @@ python3 scripts/build.py
 node --test tests/*.test.mjs
 ```
 
-[图稿字段](skill/strata-atlas/references/format.md)包含可用图形、分析段落和来源索引的定义。旧版 One Picture Explainer 的 flow、grid 稿也能在新版查看器打开。离线 HTML 可直接作为静态网站入口。两个平台包均用解压后的渲染器验证。宿主账号的实际上传、启用与自动调用仍需在对应客户端验收。
+The [diagram format](skill/strata-atlas/references/format.md) covers diagram types, annotations, sources and language. Open a standalone SVG in a browser to follow its source links. Earlier One Picture Explainer flow and grid files can also be opened.
 
-项目使用 [MIT 许可证](LICENSE)。示例图为原创矢量示意，引用的资料归各自权利人所有。
+[MIT license](LICENSE). Illustrations are original vector drawings. The cited material belongs to its respective rights holders.

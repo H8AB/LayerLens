@@ -1,15 +1,16 @@
 {
   "mode": "mechanism",
-  "title": "GPU 怎样同时算出许多结果？",
-  "scope": "NVIDIA CUDA 的一维向量加法",
-  "lead": "把 4,096 对数字逐项相加。每个线程负责一个下标，GPU 可以并行处理互不依赖的元素。",
-  "figure": "沿着一个线程块，放大到一组线程",
-  "relation": "放大",
+  "lang": "en",
+  "title": "How does a GPU add 4,096 pairs of numbers?",
+  "scope": "One-dimensional vector addition in NVIDIA CUDA",
+  "lead": "Each thread adds one pair of numbers. Because the sums are independent, the GPU can work on many elements in parallel.",
+  "figure": "Follow one block down to its first warp",
+  "relation": "Zoom into the highlight",
   "stages": [
     {
-      "name": "网格 Grid",
-      "caption": "32 个线程块",
-      "detail": "每格代表一个块，亮格对应第 0 块。",
+      "name": "Grid",
+      "caption": "32 blocks",
+      "detail": "Each tile is a block. Follow the highlighted block, number 0.",
       "visual": {
         "type": "matrix",
         "rows": 4,
@@ -18,9 +19,9 @@
       }
     },
     {
-      "name": "线程块 Block",
-      "caption": "每块 128 个线程",
-      "detail": "每格是一个线程，每行 32 个。亮行组成第一个 warp。",
+      "name": "Thread block",
+      "caption": "128 threads per block",
+      "detail": "Each tile is a thread. The highlighted row of 32 threads forms the first warp.",
       "visual": {
         "type": "matrix",
         "rows": 4,
@@ -29,9 +30,9 @@
       }
     },
     {
-      "name": "线程束 Warp",
-      "caption": "32 个执行位置",
-      "detail": "两行共 32 个线程。本例中它们执行相同的加法指令，各自使用不同下标。",
+      "name": "Warp",
+      "caption": "32 lanes",
+      "detail": "The same warp is drawn in two rows. Its threads add different pairs of numbers.",
       "visual": {
         "type": "matrix",
         "rows": 2,
@@ -42,43 +43,43 @@
   ],
   "notes": [
     {
-      "title": "谁把工作交给 GPU？",
-      "body": "CPU 启动核函数，指定 32 块 × 128 线程。块号和块内编号从 0 计起，第 2 块的 5 号线程处理下标 2 × 128 + 5 = 261。",
+      "title": "Who assigns the work?",
+      "body": "The CPU launches 32 blocks of 128 threads. With zero-based indexing, thread 5 in block 2 handles element 2 × 128 + 5 = 261.",
       "refs": [
         1
       ]
     },
     {
-      "title": "线程在哪里执行？",
-      "body": "一个块分配给一个流式多处理器（SM）。SM 在就绪的 warp 中选择并发出指令，实际并发量受硬件资源约束。",
+      "title": "Where do threads run?",
+      "body": "A block is assigned to one streaming multiprocessor (SM). The SM issues instructions to ready warps. Available hardware resources limit how many can run concurrently.",
       "refs": [
         1,
         2
       ]
     },
     {
-      "title": "算好的数字去哪儿？",
-      "body": "线程 i 读 A[i] 和 B[i]，将和写到 C[i]。相邻线程访问连续的全局内存地址，有利于合并访存请求。",
+      "title": "Where do results go?",
+      "body": "Thread i reads A[i] and B[i] and writes their sum to C[i]. When neighboring threads access consecutive addresses, the GPU can combine their memory requests.",
       "refs": [
         2
       ]
     }
   ],
   "insight": {
-    "title": "为什么再加算术单元也可能加速有限？",
-    "body": "若三组数据都是 4 字节浮点数，每个结果只做 1 次加法，逻辑上却要读 8 字节、写 4 字节。内存带宽可能先成为瓶颈。",
+    "title": "What might limit speed?",
+    "body": "For 4-byte floats, one addition needs two reads (8 bytes) and one write (4 bytes). Memory bandwidth can limit throughput even when arithmetic units have capacity.",
     "refs": [
       2
     ]
   },
-  "boundary": "4,096 和每块 128 个线程是本例设定。图中格子表示逻辑分组，格数不代表物理核心数或同时运行的线程数。",
+  "boundary": "The example uses 128 threads per block. The tiles depict logical groups. The number executing at once depends on the hardware.",
   "sources": [
     {
-      "label": "NVIDIA · CUDA 编程模型",
+      "label": "NVIDIA · CUDA Programming Model",
       "url": "https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html"
     },
     {
-      "label": "NVIDIA · CUDA 最佳实践",
+      "label": "NVIDIA · CUDA Best Practices Guide",
       "url": "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html"
     }
   ]

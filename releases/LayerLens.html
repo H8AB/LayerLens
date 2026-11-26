@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#14283a">
-  <title>图个明白 · 原理与产业拆解</title>
-  <meta name="description" content="把抽象信息整理成一张可高清缩放的图文解释图。">
+  <title data-zh="图个明白 · 原理与产业拆解">LayerLens | Visual explanations</title>
+  <meta name="description" content="Explore a technical system or a value chain in one zoomable, sourced diagram.">
   <style>:root {
   color-scheme: light;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -101,14 +101,15 @@ textarea:focus { border-color: #4aafa4; outline: 3px solid #d9f3ee; }
       <div class="brand">
         <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
         <div>
-          <strong>图个明白</strong>
-          <small>LayerLens</small>
+          <strong data-zh="图个明白">LayerLens</strong>
+
         </div>
       </div>
       <div class="top-actions">
-        <button id="download-json" type="button" class="button subtle">下载可编辑稿</button>
-        <button id="download-svg" type="button" class="button primary">导出高清 SVG</button>
-        <button id="download-png" type="button" class="button primary-alt">导出 2× PNG</button>
+        <button id="language" type="button" class="button subtle" lang="zh-CN">简体中文</button>
+        <button id="download-json" type="button" class="button subtle" data-zh="下载可编辑稿">Download JSON</button>
+        <button id="download-svg" type="button" class="button primary" data-zh="导出高清 SVG">Export SVG</button>
+        <button id="download-png" type="button" class="button primary-alt" data-zh="导出 2× PNG">Export 2× PNG</button>
       </div>
     </header>
     <main class="workspace">
@@ -116,43 +117,43 @@ textarea:focus { border-color: #4aafa4; outline: 3px solid #d9f3ee; }
         <div class="panel-heading">
           <div>
 
-            <h1 id="editor-title">编辑拆解图稿</h1>
-            <p>粘贴 AI 生成的图文 JSON，右侧立即排版成一张图。</p>
+            <h1 id="editor-title" data-zh="编辑拆解图稿">Edit diagram</h1>
+            <p data-zh="粘贴 AI 生成的图文 JSON，右侧立即排版成一张图。">Paste a diagram specification to preview it.</p>
           </div>
         </div>
         <div class="example-row">
-          <label for="example-select">试用案例</label>
+          <label for="example-select" data-zh="试用案例">Example</label>
           <select id="example-select">
-            <option value="gpu">GPU 的并行运算</option>
-            <option value="robotics">工业机器人产业链</option>
+            <option value="gpu" data-zh="GPU 的并行运算">GPU parallelism</option>
+            <option value="robotics" data-zh="工业机器人产业链">Robotics value chain</option>
           </select>
         </div>
-        <label class="editor-label" for="spec">可编辑图文数据</label>
+        <label class="editor-label" for="spec" data-zh="可编辑图文数据">Diagram JSON</label>
         <textarea id="spec" spellcheck="false" aria-describedby="format-help"></textarea>
-        <p id="format-help" class="format-help">修改图稿即可更新预览。点击图底的资料索引可查看依据。</p>
+        <p id="format-help" class="format-help" data-zh="修改图稿即可更新预览。点击图底的资料索引可查看依据。">Edits update the preview. Source links appear at the bottom of each diagram.</p>
         <div class="editor-footer">
           <span id="status" role="status" aria-live="polite"></span>
-          <button id="copy-prompt" type="button" class="text-button">复制 AI 生成指令</button>
+          <button id="copy-prompt" type="button" class="text-button" data-zh="复制 AI 生成指令">Copy AI prompt</button>
         </div>
       </section>
       <section class="preview-panel" aria-labelledby="preview-title">
         <div class="preview-toolbar">
           <div>
 
-            <h2 id="preview-title">图文解释图</h2>
+            <h2 id="preview-title" data-zh="图文解释图">Preview</h2>
           </div>
           <div class="preview-controls">
             <span id="map-stats"></span>
-            <button id="zoom-out" type="button" class="icon-button" aria-label="缩小">−</button>
+            <button id="zoom-out" type="button" class="icon-button" aria-label="Zoom out" data-zh-aria="缩小">−</button>
             <span id="zoom-label">100%</span>
-            <button id="zoom-in" type="button" class="icon-button" aria-label="放大">+</button>
-            <button id="fit" type="button" class="fit-button">适合窗口</button>
+            <button id="zoom-in" type="button" class="icon-button" aria-label="Zoom in" data-zh-aria="放大">+</button>
+            <button id="fit" type="button" class="fit-button" data-zh="适合窗口">Fit to window</button>
           </div>
         </div>
         <div id="preview-scroll" class="preview-scroll">
           <div id="map" class="map" aria-live="polite"></div>
         </div>
-        <div class="preview-hint">SVG 适合放大阅读。PNG 以两倍宽度导出。</div>
+        <div class="preview-hint" data-zh="SVG 适合放大阅读。PNG 以两倍宽度导出。">Export SVG for zooming or PNG for sharing.</div>
       </section>
     </main>
   </div>
@@ -367,52 +368,72 @@ function esc(s) {
   return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 }
 function string(v, field, max=300) {
-  if (typeof v!=='string'||!v.trim()||Array.from(v).length>max) throw Error(field+' 无效或过长');
+  if (typeof v!=='string'||!v.trim()||Array.from(v).length>max) throw Error(field+' is missing or too long');
   return v.replace(/\s+/g,' ').trim();
 }
 function list(v, field, min, max) {
-  if (!Array.isArray(v)||v.length<min||v.length>max) throw Error(field+' 数量应为 '+min+'–'+max);
+  if (!Array.isArray(v)||v.length<min||v.length>max) throw Error(field+' must contain '+min+'–'+max);
   return v;
 }
 function refs(v, total) {
-  if (!Array.isArray(v)||v.some(i=>!Number.isInteger(i)||i<1||i>total)) throw Error('依据编号与 sources 不匹配');
+  if (!Array.isArray(v)||v.some(i=>!Number.isInteger(i)||i<1||i>total)) throw Error('Reference number outside sources');
   return v;
 }
 function validate(input) {
   const s=input;
-  if (!['mechanism','industry'].includes(s?.mode)) throw Error('请选择 mechanism 或 industry');
+  if (!['mechanism','industry'].includes(s?.mode)) throw Error('Choose mechanism or industry');
   const sources=list(s.sources,'sources',0,8).map(x=>{
-    const label=string(x.label,'来源名称',65);
+    const label=string(x.label,'Source label',65);
     if (!x.url) return {label,url:''};
     let u;
-    try {u=new URL(x.url)} catch {throw Error('来源网址无效')}
-    if (!['https:','http:'].includes(u.protocol)) throw Error('来源须为网页或带页码的资料名称');
+    try {u=new URL(x.url)} catch {throw Error('Invalid source URL')}
+    if (!['https:','http:'].includes(u.protocol)) throw Error('Source URL must use HTTP or HTTPS');
     return {label,url:u.href};
   });
-  const annotation=x=>({title:string(x.title,'分析标题',80),body:string(x.body,'分析正文',300),refs:refs(x.refs,sources.length)});
-  const stages=list(s.stages,'图中对象',2,5).map(x=>{
+  const annotation=x=>({title:string(x.title,'Annotation title',80),body:string(x.body,'Annotation body',300),refs:refs(x.refs,sources.length)});
+  const stages=list(s.stages,'Stages',2,5).map(x=>{
     const v=x.visual;
     if (v?.type==='matrix') {
       const values=[v.rows,v.cols,v.lit];
-      if (!values.every(Number.isInteger)||v.rows<1||v.rows>8||v.cols<1||v.cols>32||v.lit<0||v.lit>v.rows*v.cols) throw Error('阵列行列数或高亮数量无效');
-    } else if (v?.type!=='symbol'||!Object.hasOwn(glyphs,v.symbol)) throw Error('图形类型无效');
-    return {name:string(x.name,'对象名',40),caption:string(x.caption,'图注',65),detail:string(x.detail,'图中说明',110),visual:v};
+      if (!values.every(Number.isInteger)||v.rows<1||v.rows>8||v.cols<1||v.cols>32||v.lit<0||v.lit>v.rows*v.cols) throw Error('Invalid matrix dimensions or highlight count');
+    } else if (v?.type!=='symbol'||!Object.hasOwn(glyphs,v.symbol)) throw Error('Unknown visual type');
+    return {name:string(x.name,'Stage name',40),caption:string(x.caption,'Caption',65),detail:string(x.detail,'Detail',110),visual:v};
   });
-  return {mode:s.mode,title:string(s.title,'标题',85),scope:string(s.scope,'范围',120),lead:string(s.lead,'导语',240),figure:string(s.figure,'图题',100),relation:string(s.relation,'箭头含义',24),stages,notes:list(s.notes,'分析段落',2,4).map(annotation),insight:annotation(s.insight),boundary:string(s.boundary,'适用边界',240),sources,feedback:s.feedback?string(s.feedback,'末端回传给前一环的要求',140):''};
+  const lang=s.lang || (/[\u3400-\u9fff]/.test(s.title) ? 'zh-CN' : 'en');
+  if (!['en','zh-CN'].includes(lang)) throw Error('Unsupported diagram language');
+  return {lang,mode:s.mode,title:string(s.title,'Title',85),scope:string(s.scope,'Scope',120),lead:string(s.lead,'Lead',240),figure:string(s.figure,'Figure title',100),relation:string(s.relation,'Arrow meaning',24),stages,notes:list(s.notes,'Notes',2,4).map(annotation),insight:annotation(s.insight),boundary:string(s.boundary,'Boundary',240),sources,feedback:s.feedback?string(s.feedback,'Feedback',140):''};
 }
 function text(x,y,s,size=22,fill=ink,weight=400,extra='') {
   return '<text x="'+x+'" y="'+y+'" fill="'+fill+'" font-size="'+size+'" font-weight="'+weight+'" '+extra+'>'+esc(s)+'</text>';
 }
-function lines(s,width,size) {
-  const result=[];
-  let row='', used=0;
-  for(const c of Array.from(s)) {
-    const cw=/[\x20-\x7e]/.test(c)?0.67*size:1.04*size;
-    if(used+cw>width&&row&&!/[，。；、！？）〕》]/.test(c)){result.push(row.trim());row='';used=0}
-    row+=c; used+=cw;
+function lines(value, width, size) {
+  const rows = [];
+  let row = '', used = 0;
+  // Wrap Latin words and citations together. Chinese characters can wrap individually.
+  const tokens = value.match(/\[\d+(?:,\s*\d+)*\]|[\x21-\x7e]+|[^]/gu) || [];
+  for (const token of tokens) {
+    if (!row && !token.trim()) continue;
+    let advance = 0;
+    for (const char of token) {
+      if (/[ilI.,'!|]/.test(char)) advance += 0.32;
+      else if (char === ' ') advance += 0.34;
+      else if (/[MWmw@%]/.test(char)) advance += 0.90;
+      else if (/[A-Z]/.test(char)) advance += 0.73;
+      else if (/[\x21-\x7e]/.test(char)) advance += 0.61;
+      else advance += 1.04;
+    }
+    const span = size * advance;
+    if (row && used + span > width && !/^[，。；、！？）〕》]/.test(token)) {
+      rows.push(row.trimEnd());
+      row = '';
+      used = 0;
+      if (!token.trim()) continue;
+    }
+    row += token;
+    used += span;
   }
-  if(row)result.push(row.trim());
-  return result;
+  if (row.trim()) rows.push(row.trimEnd());
+  return rows;
 }
 function para(p,x,y,s,width,size,fill=ink,weight=400,step=Math.ceil(size*1.5)) {
   for(const line of lines(s,width,size)){p.push(text(x,y,line,size,fill,weight));y+=step}
@@ -453,16 +474,17 @@ function hero(p,s,y) {
   p.push(rect(56,y,1488,end-y,diagram),...inner);
   return end;
 }
-function cite(v){return v.length?'  〔'+v.join('·')+'〕':''}
+function cite(v){return v.length?'  ['+v.join(', ')+']':''}
 function renderSvg(input) {
   if(input?.layout==='flow'||input?.layout==='grid')return renderClassic(input);
   const s=validate(input),p=[];
-  const kind=s.mode==='mechanism'?'运行原理':'产业链条';
-  p.push(rect(56,46,8,26,'#bc7042'),text(78,67,'图个明白',22,ink,700),text(188,66,'LayerLens',15,secondary,500,'font-family="'+mono+'"'),text(1544,66,kind,20,ink,600,'text-anchor="end"'));
+  const zh=s.lang==='zh-CN';
+  const kind=s.mode==='mechanism'?(zh?'运行原理':'Technical mechanism'):(zh?'产业链条':'Industry value chain');
+  p.push(rect(56,46,8,26,'#bc7042'),text(78,67,zh?'图个明白':'LayerLens',24,ink,700),text(1544,66,kind,20,ink,600,'text-anchor="end"'));
   p.push(path('M56 91H1544','#adbbb4',1));
   let y=para(p,56,174,s.title,1475,59,ink,750);
   y=para(p,60,y-12,s.lead,1470,25,secondary);
-  y=para(p,60,y+4,'研究范围  /  '+s.scope,1460,18,'#336861',550);
+  y=para(p,60,y+4,(zh?'研究范围  /  ':'Scope  /  ')+s.scope,1460,18,'#336861',550);
   y=hero(p,s,y+15)+58;
   const w=(1488-48*(s.notes.length-1))/s.notes.length;
   let next=y;
@@ -476,211 +498,403 @@ function renderSvg(input) {
   const takeaway=[];
   let a=para(takeaway,83,iy+44,s.insight.title,740,26,ink,700);
   a=para(takeaway,83,a+1,s.insight.body+cite(s.insight.refs),740,21,ink);
-  takeaway.push(text(915,iy+44,'适用边界',22,ink,680));
+  takeaway.push(text(915,iy+44,zh?'适用边界':'Scope and assumptions',22,ink,680));
   const b=para(takeaway,915,iy+86,s.boundary,580,21,secondary);
   y=Math.max(a,b)+10;
   p.push(rect(56,iy,1488,y-iy,'#e4ece5'),rect(56,iy,7,y-iy,'#428177'),...takeaway);
   y+=42;
-  p.push(text(56,y,'资料索引',18,ink,700));
+  p.push(text(56,y,zh?'资料索引':'Sources',18,ink,700));
   for(let i=0;i<s.sources.length;i++){
     const src=s.sources[i],x=56+(i%2)*740;
     if(i%2===0)y+=35;
     const label=text(x,y,'['+(i+1)+']   '+src.label,18,'#275e63',500);
     p.push(src.url?'<a href="'+esc(src.url)+'" xlink:href="'+esc(src.url)+'">'+label+'</a>':label);
   }
-  if(!s.sources.length)p.push(text(170,y,'概念示意，未附外部引文',17,secondary));
+  if(!s.sources.length)p.push(text(170,y,zh?'概念示意，未附外部引文':'Concept illustration without external references',17,secondary));
   const height=y+35,width=1600;
   const svg='<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="'+height+'" viewBox="0 0 1600 '+height+'" role="img" aria-labelledby="t d"><title id="t">'+esc(s.title)+'</title><desc id="d">'+esc(s.lead)+'</desc>'+rect(0,0,width,height,pale)+'<g font-family="PingFang SC,Microsoft YaHei,Noto Sans CJK SC,Arial,sans-serif">'+p.join('')+'</g></svg>';
   return {svg,width,height,spec:s};
 }
 
 const examples = {
-  "gpu": {
-    "mode": "mechanism",
-    "title": "GPU 怎样同时算出许多结果？",
-    "scope": "NVIDIA CUDA 的一维向量加法",
-    "lead": "把 4,096 对数字逐项相加。每个线程负责一个下标，GPU 可以并行处理互不依赖的元素。",
-    "figure": "沿着一个线程块，放大到一组线程",
-    "relation": "放大",
-    "stages": [
-      {
-        "name": "网格 Grid",
-        "caption": "32 个线程块",
-        "detail": "每格代表一个块，亮格对应第 0 块。",
-        "visual": {
-          "type": "matrix",
-          "rows": 4,
-          "cols": 8,
-          "lit": 1
+  "en": {
+    "gpu": {
+      "mode": "mechanism",
+      "lang": "en",
+      "title": "How does a GPU add 4,096 pairs of numbers?",
+      "scope": "One-dimensional vector addition in NVIDIA CUDA",
+      "lead": "Each thread adds one pair of numbers. Because the sums are independent, the GPU can work on many elements in parallel.",
+      "figure": "Follow one block down to its first warp",
+      "relation": "Zoom into the highlight",
+      "stages": [
+        {
+          "name": "Grid",
+          "caption": "32 blocks",
+          "detail": "Each tile is a block. Follow the highlighted block, number 0.",
+          "visual": {
+            "type": "matrix",
+            "rows": 4,
+            "cols": 8,
+            "lit": 1
+          }
+        },
+        {
+          "name": "Thread block",
+          "caption": "128 threads per block",
+          "detail": "Each tile is a thread. The highlighted row of 32 threads forms the first warp.",
+          "visual": {
+            "type": "matrix",
+            "rows": 4,
+            "cols": 32,
+            "lit": 32
+          }
+        },
+        {
+          "name": "Warp",
+          "caption": "32 lanes",
+          "detail": "The same warp is drawn in two rows. Its threads add different pairs of numbers.",
+          "visual": {
+            "type": "matrix",
+            "rows": 2,
+            "cols": 16,
+            "lit": 32
+          }
         }
-      },
-      {
-        "name": "线程块 Block",
-        "caption": "每块 128 个线程",
-        "detail": "每格是一个线程，每行 32 个。亮行组成第一个 warp。",
-        "visual": {
-          "type": "matrix",
-          "rows": 4,
-          "cols": 32,
-          "lit": 32
+      ],
+      "notes": [
+        {
+          "title": "Who assigns the work?",
+          "body": "The CPU launches 32 blocks of 128 threads. With zero-based indexing, thread 5 in block 2 handles element 2 × 128 + 5 = 261.",
+          "refs": [
+            1
+          ]
+        },
+        {
+          "title": "Where do threads run?",
+          "body": "A block is assigned to one streaming multiprocessor (SM). The SM issues instructions to ready warps. Available hardware resources limit how many can run concurrently.",
+          "refs": [
+            1,
+            2
+          ]
+        },
+        {
+          "title": "Where do results go?",
+          "body": "Thread i reads A[i] and B[i] and writes their sum to C[i]. When neighboring threads access consecutive addresses, the GPU can combine their memory requests.",
+          "refs": [
+            2
+          ]
         }
-      },
-      {
-        "name": "线程束 Warp",
-        "caption": "32 个执行位置",
-        "detail": "两行共 32 个线程。本例中它们执行相同的加法指令，各自使用不同下标。",
-        "visual": {
-          "type": "matrix",
-          "rows": 2,
-          "cols": 16,
-          "lit": 32
-        }
-      }
-    ],
-    "notes": [
-      {
-        "title": "谁把工作交给 GPU？",
-        "body": "CPU 启动核函数，指定 32 块 × 128 线程。块号和块内编号从 0 计起，第 2 块的 5 号线程处理下标 2 × 128 + 5 = 261。",
+      ],
+      "insight": {
+        "title": "What might limit speed?",
+        "body": "For 4-byte floats, one addition needs two reads (8 bytes) and one write (4 bytes). Memory bandwidth can limit throughput even when arithmetic units have capacity.",
         "refs": [
-          1
-        ]
-      },
-      {
-        "title": "线程在哪里执行？",
-        "body": "一个块分配给一个流式多处理器（SM）。SM 在就绪的 warp 中选择并发出指令，实际并发量受硬件资源约束。",
-        "refs": [
-          1,
           2
         ]
       },
-      {
-        "title": "算好的数字去哪儿？",
-        "body": "线程 i 读 A[i] 和 B[i]，将和写到 C[i]。相邻线程访问连续的全局内存地址，有利于合并访存请求。",
-        "refs": [
-          2
-        ]
-      }
-    ],
-    "insight": {
-      "title": "为什么再加算术单元也可能加速有限？",
-      "body": "若三组数据都是 4 字节浮点数，每个结果只做 1 次加法，逻辑上却要读 8 字节、写 4 字节。内存带宽可能先成为瓶颈。",
-      "refs": [
-        2
+      "boundary": "The example uses 128 threads per block. The tiles depict logical groups. The number executing at once depends on the hardware.",
+      "sources": [
+        {
+          "label": "NVIDIA · CUDA Programming Model",
+          "url": "https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html"
+        },
+        {
+          "label": "NVIDIA · CUDA Best Practices Guide",
+          "url": "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html"
+        }
       ]
     },
-    "boundary": "4,096 和每块 128 个线程是本例设定。图中格子表示逻辑分组，格数不代表物理核心数或同时运行的线程数。",
-    "sources": [
-      {
-        "label": "NVIDIA · CUDA 编程模型",
-        "url": "https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html"
-      },
-      {
-        "label": "NVIDIA · CUDA 最佳实践",
-        "url": "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html"
-      }
-    ]
-  },
-  "robotics": {
-    "mode": "industry",
-    "title": "一台机械臂，怎样变成焊接产能？",
-    "scope": "工业机器人产业链 · 弧焊工作站",
-    "lead": "沿着一件焊接工件追踪交付物。减速器、机器人和整套工作站各解决一个不同的问题。",
-    "figure": "从关节部件到可投产的工作站",
-    "relation": "交付",
-    "stages": [
-      {
-        "name": "部件供应商",
-        "caption": "关节传动",
-        "detail": "提供精密减速器，配合电机传递关节所需的转速和转矩。",
-        "visual": {
-          "type": "symbol",
-          "symbol": "gear"
+    "robotics": {
+      "mode": "industry",
+      "lang": "en",
+      "title": "How does a robot arm become a welding cell?",
+      "scope": "Industrial robots used in arc welding",
+      "lead": "Follow the handoffs from a joint reducer to an accepted weld. Each supplier delivers a different capability.",
+      "figure": "Four roles from joint motion to weld quality",
+      "relation": "Deliver to the next role",
+      "stages": [
+        {
+          "name": "Component maker",
+          "caption": "Joint transmission",
+          "detail": "A precision reducer works with the motor to deliver the speed and torque a joint needs.",
+          "visual": {
+            "type": "symbol",
+            "symbol": "gear"
+          }
+        },
+        {
+          "name": "Robot maker",
+          "caption": "Controlled motion",
+          "detail": "Mechanical joints, drives and a controller move the arm along a programmed path.",
+          "visual": {
+            "type": "symbol",
+            "symbol": "arm"
+          }
+        },
+        {
+          "name": "System integrator",
+          "caption": "Welding cell",
+          "detail": "The integrator selects the torch, power supply, fixtures and guarding, then programs and tests the cell.",
+          "visual": {
+            "type": "symbol",
+            "symbol": "cell"
+          }
+        },
+        {
+          "name": "Factory",
+          "caption": "Accepted parts",
+          "detail": "The factory checks weld quality and cycle time against its requirements and plans maintenance.",
+          "visual": {
+            "type": "symbol",
+            "symbol": "weld"
+          }
         }
-      },
-      {
-        "name": "机器人制造商",
-        "caption": "受控运动",
-        "detail": "把机械结构、驱动和控制器组成能够按轨迹运动的机器人。",
-        "visual": {
-          "type": "symbol",
-          "symbol": "arm"
+      ],
+      "notes": [
+        {
+          "title": "What does the joint supply?",
+          "body": "A reducer transmits motion at the joint. Motor sizing, sensing and control also shape how the arm moves.",
+          "refs": [
+            1,
+            2
+          ]
+        },
+        {
+          "title": "What does integration add?",
+          "body": "The arm can reach a point in space. Making a repeatable weld also takes a fixture that locates the part and a torch and power source working together.",
+          "refs": [
+            2,
+            3
+          ]
+        },
+        {
+          "title": "How is value verified?",
+          "body": "Trial-weld a representative part, inspect the joint and time the full cycle. These checks show whether the cell meets production needs.",
+          "refs": [
+            3,
+            4
+          ]
         }
-      },
-      {
-        "name": "系统集成商",
-        "caption": "焊接工作站",
-        "detail": "匹配焊源、焊枪、夹具和防护，编程并调试整站。",
-        "visual": {
-          "type": "symbol",
-          "symbol": "cell"
-        }
-      },
-      {
-        "name": "制造工厂",
-        "caption": "合格工件",
-        "detail": "按产品要求验证焊缝质量与生产节拍，并安排日常维护。",
-        "visual": {
-          "type": "symbol",
-          "symbol": "weld"
-        }
-      }
-    ],
-    "feedback": "工厂提出工件尺寸、焊缝位置和目标节拍，集成商据此选型与布置。",
-    "notes": [
-      {
-        "title": "部件提供什么能力？",
-        "body": "减速器可用于机器人关节。关节的运动表现还取决于电机、传感与控制，单个部件只是整机性能的一项因素。",
+      ],
+      "insight": {
+        "title": "What if the fixture shifts?",
+        "body": "The real seam can move away from the programmed path. An integrator can improve the fixture or add seam finding, then check how the extra motion affects cycle time.",
         "refs": [
-          1,
-          2
-        ]
-      },
-      {
-        "title": "为什么要单列集成？",
-        "body": "机械臂能够到达一个位置，焊接还需要可靠地定位工件，并让焊枪、焊接电源及工装协调工作。",
-        "refs": [
-          2,
           3
         ]
       },
-      {
-        "title": "价值如何被验证？",
-        "body": "可用同一个工件做试焊，检查接头质量并记录完整循环用时。工厂据此判断工作站能否满足产线要求。",
+      "boundary": "These roles can overlap. Welding equipment and tooling may be supplied directly to the integrator. The diagram covers industrial arc welding.",
+      "sources": [
+        {
+          "label": "Harmonic Drive · Joint reducers",
+          "url": "https://www.hds.co.jp/english/company/business/example/"
+        },
+        {
+          "label": "ABB · Robotics glossary",
+          "url": "https://global.abb/content/dam/abb/global/group/investors/documents/ir-events/2017/Glossary%20of%20technical%20terms%20-%20abb-innovation-technology-day%20-%202017.pdf"
+        },
+        {
+          "label": "Lincoln Electric · Arc sensing",
+          "url": "https://qacd10.lincolnelectric.com/en-GB/Welding-and-Cutting-Resource-Center/Process-and-Theory/Intelligent-Robotic-Arc-Sensing"
+        },
+        {
+          "label": "Lincoln Electric · Customer case",
+          "url": "https://ch-delivery.lincolnelectric.com/api/public/content/20f948ba18cf4c10a276d54630974fb1?v=1b992607"
+        }
+      ],
+      "feedback": "The factory specifies part size, weld locations and cycle time. The integrator uses these to select equipment."
+    }
+  },
+  "zh-CN": {
+    "gpu": {
+      "mode": "mechanism",
+      "title": "GPU 怎样同时算出许多结果？",
+      "scope": "NVIDIA CUDA 的一维向量加法",
+      "lead": "把 4,096 对数字逐项相加。每个线程负责一个下标，GPU 可以并行处理互不依赖的元素。",
+      "figure": "沿着一个线程块，放大到一组线程",
+      "relation": "放大",
+      "stages": [
+        {
+          "name": "网格 Grid",
+          "caption": "32 个线程块",
+          "detail": "每格代表一个块，亮格对应第 0 块。",
+          "visual": {
+            "type": "matrix",
+            "rows": 4,
+            "cols": 8,
+            "lit": 1
+          }
+        },
+        {
+          "name": "线程块 Block",
+          "caption": "每块 128 个线程",
+          "detail": "每格是一个线程，每行 32 个。亮行组成第一个 warp。",
+          "visual": {
+            "type": "matrix",
+            "rows": 4,
+            "cols": 32,
+            "lit": 32
+          }
+        },
+        {
+          "name": "线程束 Warp",
+          "caption": "32 个执行位置",
+          "detail": "两行共 32 个线程。本例中它们执行相同的加法指令，各自使用不同下标。",
+          "visual": {
+            "type": "matrix",
+            "rows": 2,
+            "cols": 16,
+            "lit": 32
+          }
+        }
+      ],
+      "notes": [
+        {
+          "title": "谁把工作交给 GPU？",
+          "body": "CPU 启动核函数，指定 32 块 × 128 线程。块号和块内编号从 0 计起，第 2 块的 5 号线程处理下标 2 × 128 + 5 = 261。",
+          "refs": [
+            1
+          ]
+        },
+        {
+          "title": "线程在哪里执行？",
+          "body": "一个块分配给一个流式多处理器（SM）。SM 在就绪的 warp 中选择并发出指令，实际并发量受硬件资源约束。",
+          "refs": [
+            1,
+            2
+          ]
+        },
+        {
+          "title": "算好的数字去哪儿？",
+          "body": "线程 i 读 A[i] 和 B[i]，将和写到 C[i]。相邻线程访问连续的全局内存地址，有利于合并访存请求。",
+          "refs": [
+            2
+          ]
+        }
+      ],
+      "insight": {
+        "title": "为什么再加算术单元也可能加速有限？",
+        "body": "若三组数据都是 4 字节浮点数，每个结果只做 1 次加法，逻辑上却要读 8 字节、写 4 字节。内存带宽可能先成为瓶颈。",
         "refs": [
-          3,
-          4
+          2
         ]
-      }
-    ],
-    "insight": {
-      "title": "夹具偏一点，影响会传到哪一层？",
-      "body": "工件偏移会使实际焊缝偏离程序轨迹。集成商可改善定位或加入寻位功能，同时评估额外动作对节拍的影响。",
-      "refs": [
-        3
-      ]
+      },
+      "boundary": "4,096 和每块 128 个线程是本例设定。图中格子表示逻辑分组，格数不代表物理核心数或同时运行的线程数。",
+      "sources": [
+        {
+          "label": "NVIDIA · CUDA 编程模型",
+          "url": "https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html"
+        },
+        {
+          "label": "NVIDIA · CUDA 最佳实践",
+          "url": "https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html"
+        }
+      ],
+      "lang": "zh-CN"
     },
-    "boundary": "按交付角色划分，同一家企业可以兼任制造与集成。焊源、工装等也可直接供给集成商。范围限于工业弧焊场景。",
-    "sources": [
-      {
-        "label": "Harmonic Drive · 关节减速器",
-        "url": "https://www.hds.co.jp/english/company/business/example/"
+    "robotics": {
+      "mode": "industry",
+      "title": "一台机械臂，怎样变成焊接产能？",
+      "scope": "工业机器人产业链 · 弧焊工作站",
+      "lead": "沿着一件焊接工件追踪交付物。减速器、机器人和整套工作站各解决一个不同的问题。",
+      "figure": "从关节部件到可投产的工作站",
+      "relation": "交付",
+      "stages": [
+        {
+          "name": "部件供应商",
+          "caption": "关节传动",
+          "detail": "提供精密减速器，配合电机传递关节所需的转速和转矩。",
+          "visual": {
+            "type": "symbol",
+            "symbol": "gear"
+          }
+        },
+        {
+          "name": "机器人制造商",
+          "caption": "受控运动",
+          "detail": "把机械结构、驱动和控制器组成能够按轨迹运动的机器人。",
+          "visual": {
+            "type": "symbol",
+            "symbol": "arm"
+          }
+        },
+        {
+          "name": "系统集成商",
+          "caption": "焊接工作站",
+          "detail": "匹配焊源、焊枪、夹具和防护，编程并调试整站。",
+          "visual": {
+            "type": "symbol",
+            "symbol": "cell"
+          }
+        },
+        {
+          "name": "制造工厂",
+          "caption": "合格工件",
+          "detail": "按产品要求验证焊缝质量与生产节拍，并安排日常维护。",
+          "visual": {
+            "type": "symbol",
+            "symbol": "weld"
+          }
+        }
+      ],
+      "feedback": "工厂提出工件尺寸、焊缝位置和目标节拍，集成商据此选型与布置。",
+      "notes": [
+        {
+          "title": "部件提供什么能力？",
+          "body": "减速器可用于机器人关节。关节的运动表现还取决于电机、传感与控制，单个部件只是整机性能的一项因素。",
+          "refs": [
+            1,
+            2
+          ]
+        },
+        {
+          "title": "为什么要单列集成？",
+          "body": "机械臂能够到达一个位置，焊接还需要可靠地定位工件，并让焊枪、焊接电源及工装协调工作。",
+          "refs": [
+            2,
+            3
+          ]
+        },
+        {
+          "title": "价值如何被验证？",
+          "body": "可用同一个工件做试焊，检查接头质量并记录完整循环用时。工厂据此判断工作站能否满足产线要求。",
+          "refs": [
+            3,
+            4
+          ]
+        }
+      ],
+      "insight": {
+        "title": "夹具偏一点，影响会传到哪一层？",
+        "body": "工件偏移会使实际焊缝偏离程序轨迹。集成商可改善定位或加入寻位功能，同时评估额外动作对节拍的影响。",
+        "refs": [
+          3
+        ]
       },
-      {
-        "label": "ABB · 工业机器人术语",
-        "url": "https://global.abb/content/dam/abb/global/group/investors/documents/ir-events/2017/Glossary%20of%20technical%20terms%20-%20abb-innovation-technology-day%20-%202017.pdf"
-      },
-      {
-        "label": "Lincoln Electric · 焊缝寻位",
-        "url": "https://qacd10.lincolnelectric.com/en-GB/Welding-and-Cutting-Resource-Center/Process-and-Theory/Intelligent-Robotic-Arc-Sensing"
-      },
-      {
-        "label": "Lincoln Electric · 应用案例",
-        "url": "https://ch-delivery.lincolnelectric.com/api/public/content/20f948ba18cf4c10a276d54630974fb1?v=1b992607"
-      }
-    ]
+      "boundary": "按交付角色划分，同一家企业可以兼任制造与集成。焊源、工装等也可直接供给集成商。范围限于工业弧焊场景。",
+      "sources": [
+        {
+          "label": "Harmonic Drive · 关节减速器",
+          "url": "https://www.hds.co.jp/english/company/business/example/"
+        },
+        {
+          "label": "ABB · 工业机器人术语",
+          "url": "https://global.abb/content/dam/abb/global/group/investors/documents/ir-events/2017/Glossary%20of%20technical%20terms%20-%20abb-innovation-technology-day%20-%202017.pdf"
+        },
+        {
+          "label": "Lincoln Electric · 焊缝寻位",
+          "url": "https://qacd10.lincolnelectric.com/en-GB/Welding-and-Cutting-Resource-Center/Process-and-Theory/Intelligent-Robotic-Arc-Sensing"
+        },
+        {
+          "label": "Lincoln Electric · 应用案例",
+          "url": "https://ch-delivery.lincolnelectric.com/api/public/content/20f948ba18cf4c10a276d54630974fb1?v=1b992607"
+        }
+      ],
+      "lang": "zh-CN"
+    }
   }
 };
-const webPrompt = "请用「图个明白」把我接下来给出的内容整理成一张高清拆解图。\n\n# 图个明白\n\n为有背景知识但初次接触此主题的读者制作一张可放大的专业图解。根据用户指定的对象、语言与深度调整表达。成品包括 SVG 主图和可继续修改的 JSON 稿。\n\n## 拆解方法\n\n1. 将宽泛主题收窄为一个可以验证的问题。在 scope 中写明架构、产品类别或具体应用。若材料覆盖多个问题，选能解释核心关系的一条作主图，其余放入边界说明。\n2. **运行原理**用一个输入贯穿到输出。对应到部件、软件抽象和硬件执行位置，写出各自改变了什么。箭头可以表示流动或层级放大，应写明含义。用一个可核验的推导解释瓶颈或失效条件。避免把逻辑上的并行数画成物理单元数。\n3. **产业链条**从一个终端场景倒推。每个角色说清交付物、接收方与新增能力。指出不同供应路径、集成责任和下游验收条件。在有依据时加入需求回传。按职能定义角色，同一家企业可以跨层参与。\n4. 根据用户材料或已核对的一手资料写图。把原文事实、例题设定与推论用清晰措辞区分。示例计算要带单位、前提和可复核的算式。来源索引按文内引用编号从 1 开始。没有检索条件时引用用户文档名称和页码，标注尚待核实的主张。涉及市场规模、份额或成本时须说明时间和口径。\n5. 让图形承担解释工作。空间位置表示层级、流向或交付顺序。用阵列只表示可核对的数量，亮格须在图注中解释。检查读者能否顺着图回答“怎么运作、为什么、在哪个条件下结论会变”。\n\n\n直接按下面的字段说明提供完整 JSON，以便粘入查看器。\n\n# 图稿字段\n\nUTF-8 JSON 对象。字段名用英文，正文跟随用户语言。网页端和命令行共用同一格式。\n\n- `mode` 取 `mechanism` 或 `industry`。\n- `title` 提出核心问题，`scope` 限定对象，`lead` 用一两句话直接回答。\n- `figure` 是主图标题，`relation` 说明相邻对象间的箭头含义，如“沿数据路径”“放大高亮部分”“交付实物与系统”。选用一种贯穿主图的关系。\n- `stages` 列出 2–5 个对象。每个包含 `name`、`caption`、`detail`、`visual`。caption 写关键数量、功能或交付物；detail 解释它与下一个对象的关系。\n- `visual` 可用 `{\"type\":\"matrix\",\"rows\":4,\"cols\":8,\"lit\":1}`。行数 1–8，列数 1–32，高亮前 lit 个格。数量应从材料或明确的例题得出。\n- 其他对象可用 `{\"type\":\"symbol\",\"symbol\":\"input\"}`。通用语义图形有 input、process、output、stack；机械图形有 gear、arm、cell、weld。任取适合的形状。图注承担精确定义。\n- `feedback` 可省略。有下游向前一环提出的要求时，写出发出方、接收方与要求。\n- `notes` 是 2–4 个分析段落，`insight` 是一个能揭示瓶颈、验收标准或失效条件的推论。两者的条目都含 `title`、`body`、`refs`。refs 为来源编号数组。\n- `boundary` 写明具体条件与简化。例题中的数值要明确注明。\n- `sources` 是最多 8 个对象组成的数组，元素包含简短 `label` 和可选 `url`。官方网页使用 http(s) 链接，用户文档在 label 中写文档名及页码。无外部依据的自拟示例可用空数组并交代来历。\n\n参考下面的有效图稿格式。主题、图形和依据按实际材料选择。\n{\n  \"mode\": \"mechanism\",\n  \"title\": \"GPU 怎样同时算出许多结果？\",\n  \"scope\": \"NVIDIA CUDA 的一维向量加法\",\n  \"lead\": \"把 4,096 对数字逐项相加。每个线程负责一个下标，GPU 可以并行处理互不依赖的元素。\",\n  \"figure\": \"沿着一个线程块，放大到一组线程\",\n  \"relation\": \"放大\",\n  \"stages\": [\n    {\n      \"name\": \"网格 Grid\",\n      \"caption\": \"32 个线程块\",\n      \"detail\": \"每格代表一个块，亮格对应第 0 块。\",\n      \"visual\": {\n        \"type\": \"matrix\",\n        \"rows\": 4,\n        \"cols\": 8,\n        \"lit\": 1\n      }\n    },\n    {\n      \"name\": \"线程块 Block\",\n      \"caption\": \"每块 128 个线程\",\n      \"detail\": \"每格是一个线程，每行 32 个。亮行组成第一个 warp。\",\n      \"visual\": {\n        \"type\": \"matrix\",\n        \"rows\": 4,\n        \"cols\": 32,\n        \"lit\": 32\n      }\n    },\n    {\n      \"name\": \"线程束 Warp\",\n      \"caption\": \"32 个执行位置\",\n      \"detail\": \"两行共 32 个线程。本例中它们执行相同的加法指令，各自使用不同下标。\",\n      \"visual\": {\n        \"type\": \"matrix\",\n        \"rows\": 2,\n        \"cols\": 16,\n        \"lit\": 32\n      }\n    }\n  ],\n  \"notes\": [\n    {\n      \"title\": \"谁把工作交给 GPU？\",\n      \"body\": \"CPU 启动核函数，指定 32 块 × 128 线程。块号和块内编号从 0 计起，第 2 块的 5 号线程处理下标 2 × 128 + 5 = 261。\",\n      \"refs\": [\n        1\n      ]\n    },\n    {\n      \"title\": \"线程在哪里执行？\",\n      \"body\": \"一个块分配给一个流式多处理器（SM）。SM 在就绪的 warp 中选择并发出指令，实际并发量受硬件资源约束。\",\n      \"refs\": [\n        1,\n        2\n      ]\n    },\n    {\n      \"title\": \"算好的数字去哪儿？\",\n      \"body\": \"线程 i 读 A[i] 和 B[i]，将和写到 C[i]。相邻线程访问连续的全局内存地址，有利于合并访存请求。\",\n      \"refs\": [\n        2\n      ]\n    }\n  ],\n  \"insight\": {\n    \"title\": \"为什么再加算术单元也可能加速有限？\",\n    \"body\": \"若三组数据都是 4 字节浮点数，每个结果只做 1 次加法，逻辑上却要读 8 字节、写 4 字节。内存带宽可能先成为瓶颈。\",\n    \"refs\": [\n      2\n    ]\n  },\n  \"boundary\": \"4,096 和每块 128 个线程是本例设定。图中格子表示逻辑分组，格数不代表物理核心数或同时运行的线程数。\",\n  \"sources\": [\n    {\n      \"label\": \"NVIDIA · CUDA 编程模型\",\n      \"url\": \"https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html\"\n    },\n    {\n      \"label\": \"NVIDIA · CUDA 最佳实践\",\n      \"url\": \"https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html\"\n    }\n  ]\n}";
+const webPrompt = {"en": "Use LayerLens to explain the subject I provide in a single, sourced diagram. For a mechanism, trace an input through the system. For an industry, follow a deliverable between roles. State assumptions and one limiting condition. Use English unless I request another supported language. Return editable JSON using this format.\n# Diagram format\n\nSupply a UTF-8 JSON object. See [the CUDA example](gpu.json) for a complete file.\n\n- `lang` accepts `en` or `zh-CN`. English is the default for new diagrams. Set the language and write all content in that language.\n- `mode` is `mechanism` or `industry`.\n- `title` states the question. `scope` limits the subject. `lead` gives the short answer.\n- `figure` names the main illustration. `relation` defines what the arrows mean, such as “Zoom into the highlight” or “Deliver to the next role”.\n- `stages` contains 2–5 objects with `name`, `caption`, `detail` and `visual`. Explain the object's output or the next level of detail.\n- A matrix visual uses `{\"type\":\"matrix\",\"rows\":4,\"cols\":8,\"lit\":1}`. Use 1–8 rows and 1–32 columns. The first lit cells are highlighted. Use counts the reader can verify.\n- Symbol visuals use `{\"type\":\"symbol\",\"symbol\":\"input\"}`. Choose input, process, output, stack, gear, arm, cell or weld.\n- Optional `feedback` describes a requirement sent back from the final stage to the preceding one.\n- `notes` contains 2–4 annotations. `insight` is one annotation explaining a bottleneck, acceptance test, or failure condition. Every annotation has `title`, `body` and `refs`. Reference numbers start at 1.\n- `boundary` explains the assumptions behind the example and where the conclusion applies.\n- `sources` lists up to 8 entries with a short `label` and an optional HTTP(S) `url`. Use a document title and page number for local sources. For an original example, identify the assumptions and use an empty references list if appropriate.\n\n{\n  \"mode\": \"mechanism\",\n  \"lang\": \"en\",\n  \"title\": \"How does a GPU add 4,096 pairs of numbers?\",\n  \"scope\": \"One-dimensional vector addition in NVIDIA CUDA\",\n  \"lead\": \"Each thread adds one pair of numbers. Because the sums are independent, the GPU can work on many elements in parallel.\",\n  \"figure\": \"Follow one block down to its first warp\",\n  \"relation\": \"Zoom into the highlight\",\n  \"stages\": [\n    {\n      \"name\": \"Grid\",\n      \"caption\": \"32 blocks\",\n      \"detail\": \"Each tile is a block. Follow the highlighted block, number 0.\",\n      \"visual\": {\n        \"type\": \"matrix\",\n        \"rows\": 4,\n        \"cols\": 8,\n        \"lit\": 1\n      }\n    },\n    {\n      \"name\": \"Thread block\",\n      \"caption\": \"128 threads per block\",\n      \"detail\": \"Each tile is a thread. The highlighted row of 32 threads forms the first warp.\",\n      \"visual\": {\n        \"type\": \"matrix\",\n        \"rows\": 4,\n        \"cols\": 32,\n        \"lit\": 32\n      }\n    },\n    {\n      \"name\": \"Warp\",\n      \"caption\": \"32 lanes\",\n      \"detail\": \"The same warp is drawn in two rows. Its threads add different pairs of numbers.\",\n      \"visual\": {\n        \"type\": \"matrix\",\n        \"rows\": 2,\n        \"cols\": 16,\n        \"lit\": 32\n      }\n    }\n  ],\n  \"notes\": [\n    {\n      \"title\": \"Who assigns the work?\",\n      \"body\": \"The CPU launches 32 blocks of 128 threads. With zero-based indexing, thread 5 in block 2 handles element 2 × 128 + 5 = 261.\",\n      \"refs\": [\n        1\n      ]\n    },\n    {\n      \"title\": \"Where do threads run?\",\n      \"body\": \"A block is assigned to one streaming multiprocessor (SM). The SM issues instructions to ready warps. Available hardware resources limit how many can run concurrently.\",\n      \"refs\": [\n        1,\n        2\n      ]\n    },\n    {\n      \"title\": \"Where do results go?\",\n      \"body\": \"Thread i reads A[i] and B[i] and writes their sum to C[i]. When neighboring threads access consecutive addresses, the GPU can combine their memory requests.\",\n      \"refs\": [\n        2\n      ]\n    }\n  ],\n  \"insight\": {\n    \"title\": \"What might limit speed?\",\n    \"body\": \"For 4-byte floats, one addition needs two reads (8 bytes) and one write (4 bytes). Memory bandwidth can limit throughput even when arithmetic units have capacity.\",\n    \"refs\": [\n      2\n    ]\n  },\n  \"boundary\": \"The example uses 128 threads per block. The tiles depict logical groups. The number executing at once depends on the hardware.\",\n  \"sources\": [\n    {\n      \"label\": \"NVIDIA · CUDA Programming Model\",\n      \"url\": \"https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html\"\n    },\n    {\n      \"label\": \"NVIDIA · CUDA Best Practices Guide\",\n      \"url\": \"https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html\"\n    }\n  ]\n}", "zh-CN": "请用图个明白拆解我提供的主题。运行原理请追踪输入到输出，产业链请追踪各环节的交付物。标明依据、假设和适用条件。使用简体中文，按以下格式返回完整 JSON。\n# 图稿字段\n\nUTF-8 JSON 对象。字段名用英文，正文跟随用户语言。网页端和命令行共用同一格式。\n\n- `lang` 可选 en 或 zh-CN。生成中文图稿时设为 zh-CN。\n- `mode` 取 `mechanism` 或 `industry`。\n- `title` 提出核心问题，`scope` 限定对象，`lead` 用一两句话直接回答。\n- `figure` 是主图标题，`relation` 说明相邻对象间的箭头含义，如“沿数据路径”“放大高亮部分”“交付实物与系统”。选用一种贯穿主图的关系。\n- `stages` 列出 2–5 个对象。每个包含 `name`、`caption`、`detail`、`visual`。caption 写关键数量、功能或交付物；detail 解释它与下一个对象的关系。\n- `visual` 可用 `{\"type\":\"matrix\",\"rows\":4,\"cols\":8,\"lit\":1}`。行数 1–8，列数 1–32，高亮前 lit 个格。数量应从材料或明确的例题得出。\n- 其他对象可用 `{\"type\":\"symbol\",\"symbol\":\"input\"}`。通用语义图形有 input、process、output、stack；机械图形有 gear、arm、cell、weld。任取适合的形状。图注承担精确定义。\n- `feedback` 可省略。有下游向前一环提出的要求时，写出发出方、接收方与要求。\n- `notes` 是 2–4 个分析段落，`insight` 是一个能揭示瓶颈、验收标准或失效条件的推论。两者的条目都含 `title`、`body`、`refs`。refs 为来源编号数组。\n- `boundary` 写明具体条件与简化。例题中的数值要明确注明。\n- `sources` 是最多 8 个对象组成的数组，元素包含简短 `label` 和可选 `url`。官方网页使用 http(s) 链接，用户文档在 label 中写文档名及页码。无外部依据的自拟示例可用空数组并交代来历。\n\n{\n  \"mode\": \"mechanism\",\n  \"title\": \"GPU 怎样同时算出许多结果？\",\n  \"scope\": \"NVIDIA CUDA 的一维向量加法\",\n  \"lead\": \"把 4,096 对数字逐项相加。每个线程负责一个下标，GPU 可以并行处理互不依赖的元素。\",\n  \"figure\": \"沿着一个线程块，放大到一组线程\",\n  \"relation\": \"放大\",\n  \"stages\": [\n    {\n      \"name\": \"网格 Grid\",\n      \"caption\": \"32 个线程块\",\n      \"detail\": \"每格代表一个块，亮格对应第 0 块。\",\n      \"visual\": {\n        \"type\": \"matrix\",\n        \"rows\": 4,\n        \"cols\": 8,\n        \"lit\": 1\n      }\n    },\n    {\n      \"name\": \"线程块 Block\",\n      \"caption\": \"每块 128 个线程\",\n      \"detail\": \"每格是一个线程，每行 32 个。亮行组成第一个 warp。\",\n      \"visual\": {\n        \"type\": \"matrix\",\n        \"rows\": 4,\n        \"cols\": 32,\n        \"lit\": 32\n      }\n    },\n    {\n      \"name\": \"线程束 Warp\",\n      \"caption\": \"32 个执行位置\",\n      \"detail\": \"两行共 32 个线程。本例中它们执行相同的加法指令，各自使用不同下标。\",\n      \"visual\": {\n        \"type\": \"matrix\",\n        \"rows\": 2,\n        \"cols\": 16,\n        \"lit\": 32\n      }\n    }\n  ],\n  \"notes\": [\n    {\n      \"title\": \"谁把工作交给 GPU？\",\n      \"body\": \"CPU 启动核函数，指定 32 块 × 128 线程。块号和块内编号从 0 计起，第 2 块的 5 号线程处理下标 2 × 128 + 5 = 261。\",\n      \"refs\": [\n        1\n      ]\n    },\n    {\n      \"title\": \"线程在哪里执行？\",\n      \"body\": \"一个块分配给一个流式多处理器（SM）。SM 在就绪的 warp 中选择并发出指令，实际并发量受硬件资源约束。\",\n      \"refs\": [\n        1,\n        2\n      ]\n    },\n    {\n      \"title\": \"算好的数字去哪儿？\",\n      \"body\": \"线程 i 读 A[i] 和 B[i]，将和写到 C[i]。相邻线程访问连续的全局内存地址，有利于合并访存请求。\",\n      \"refs\": [\n        2\n      ]\n    }\n  ],\n  \"insight\": {\n    \"title\": \"为什么再加算术单元也可能加速有限？\",\n    \"body\": \"若三组数据都是 4 字节浮点数，每个结果只做 1 次加法，逻辑上却要读 8 字节、写 4 字节。内存带宽可能先成为瓶颈。\",\n    \"refs\": [\n      2\n    ]\n  },\n  \"boundary\": \"4,096 和每块 128 个线程是本例设定。图中格子表示逻辑分组，格数不代表物理核心数或同时运行的线程数。\",\n  \"sources\": [\n    {\n      \"label\": \"NVIDIA · CUDA 编程模型\",\n      \"url\": \"https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html\"\n    },\n    {\n      \"label\": \"NVIDIA · CUDA 最佳实践\",\n      \"url\": \"https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/index.html\"\n    }\n  ],\n  \"lang\": \"zh-CN\"\n}"};
 
 
 const editor = document.getElementById('spec');
@@ -693,6 +907,26 @@ const select = document.getElementById('example-select');
 let current = null;
 let zoom = 1;
 let autoFit = true;
+let language = 'en';
+function msg(en, zh) { return language==='en' ? en : zh; }
+function applyLanguage(next) {
+  const pristine = !editor.value || editor.value===JSON.stringify(examples[language][select.value],null,2);
+  language = next;
+  document.documentElement.lang = next;
+  document.querySelectorAll('[data-zh]').forEach(el => {
+    el.dataset.en ??= el.textContent;
+    el.textContent = msg(el.dataset.en, el.dataset.zh);
+  });
+  document.querySelectorAll('[data-zh-aria]').forEach(el => {
+    el.dataset.enAria ??= el.getAttribute('aria-label');
+    el.setAttribute('aria-label', msg(el.dataset.enAria, el.dataset.zhAria));
+  });
+  const button=document.getElementById('language');
+  button.textContent=msg('简体中文','English');
+  button.lang=msg('zh-CN','en');
+  if(pristine) setExample(select.value); else render();
+}
+document.getElementById('language').addEventListener('click',()=>applyLanguage(msg('zh-CN','en')));
 
 function notify(message, error = false) {
   status.textContent = message;
@@ -730,19 +964,19 @@ function render() {
   try {
     current = renderSvg(JSON.parse(editor.value));
     map.innerHTML = current.svg;
-    stats.textContent = {mechanism:'运行原理', industry:'产业链条'}[current.spec.mode] || '经典图稿';
+    stats.textContent = {mechanism:msg('Technical mechanism','运行原理'), industry:msg('Industry value chain','产业链条')}[current.spec.mode] || msg('Classic diagram','经典图稿');
     applyZoom();
-    notify('图文已更新');
+    notify(msg('Preview updated','图文已更新'));
   } catch (error) {
     current = null;
     map.textContent = '';
     stats.textContent = '';
-    notify(error instanceof SyntaxError ? 'JSON 格式有误，请检查逗号和引号。' : error.message, true);
+    notify(error instanceof SyntaxError ? msg('Invalid JSON. Check commas and quotation marks.','JSON 格式有误，请检查逗号和引号。') : error.message, true);
   }
 }
 
 function setExample(key) {
-  editor.value = JSON.stringify(examples[key], null, 2);
+  editor.value = JSON.stringify(examples[language][key], null, 2);
   autoFit = true;
   render();
 }
@@ -754,41 +988,41 @@ document.getElementById('fit').addEventListener('click', () => { autoFit = true;
 document.getElementById('zoom-in').addEventListener('click', () => { autoFit = false; zoom += 0.2; applyZoom(); });
 document.getElementById('zoom-out').addEventListener('click', () => { autoFit = false; zoom -= 0.2; applyZoom(); });
 document.getElementById('download-json').addEventListener('click', () => {
-  if (!current) return notify('请先修正图文数据。', true);
+  if (!current) return notify(msg('Fix the specification before exporting.','请先修正图文数据。'), true);
   download(new Blob([JSON.stringify(current.spec, null, 2) + '\n'], { type: 'application/json;charset=utf-8' }), filename('json'));
-  notify('已下载可编辑稿');
+  notify(msg('JSON exported','已下载可编辑稿'));
 });
 document.getElementById('download-svg').addEventListener('click', () => {
-  if (!current) return notify('请先修正图文数据。', true);
+  if (!current) return notify(msg('Fix the specification before exporting.','请先修正图文数据。'), true);
   download(new Blob([current.svg], { type: 'image/svg+xml;charset=utf-8' }), filename('svg'));
-  notify('已导出 SVG');
+  notify(msg('SVG exported','已导出 SVG'));
 });
 document.getElementById('download-png').addEventListener('click', () => {
-  if (!current) return notify('请先修正图文数据。', true);
+  if (!current) return notify(msg('Fix the specification before exporting.','请先修正图文数据。'), true);
   const canvas = document.createElement('canvas');
   canvas.width = current.width * 2;
   canvas.height = current.height * 2;
   const context = canvas.getContext('2d');
-  if (!context) return notify('当前浏览器无法创建 PNG。', true);
+  if (!context) return notify(msg('This browser could not create a PNG.','当前浏览器无法创建 PNG。'), true);
   const image = new Image();
   const url = URL.createObjectURL(new Blob([current.svg], { type: 'image/svg+xml;charset=utf-8' }));
   image.onload = () => {
     context.drawImage(image, 0, 0, canvas.width, canvas.height);
     URL.revokeObjectURL(url);
     canvas.toBlob((blob) => {
-      if (blob) { download(blob, filename('png')); notify('已导出 2× PNG'); }
-      else notify('PNG 导出失败。', true);
+      if (blob) { download(blob, filename('png')); notify(msg('2× PNG exported','已导出 2× PNG')); }
+      else notify(msg('PNG export failed.','PNG 导出失败。'), true);
     }, 'image/png');
   };
-  image.onerror = () => { URL.revokeObjectURL(url); notify('PNG 导出失败。', true); };
+  image.onerror = () => { URL.revokeObjectURL(url); notify(msg('PNG export failed.','PNG 导出失败。'), true); };
   image.src = url;
 });
 document.getElementById('copy-prompt').addEventListener('click', async () => {
-  try { await navigator.clipboard.writeText(webPrompt); notify('已复制 AI 生成指令'); }
-  catch { download(new Blob([webPrompt], { type: 'text/plain;charset=utf-8' }), '图个明白-网页指令.txt'); notify('已提供可复制的指令文件'); }
+  try { await navigator.clipboard.writeText(webPrompt[language]); notify(msg('Prompt copied','已复制 AI 生成指令')); }
+  catch { download(new Blob([webPrompt[language]], { type: 'text/plain;charset=utf-8' }), msg('layerlens-web-prompt.txt','layerlens-web-prompt.zh-CN.txt')); notify(msg('Prompt downloaded as a text file','已提供可复制的指令文件')); }
 });
 
-setExample('gpu');
+applyLanguage(location.hash==='#zh-CN'?'zh-CN':'en');
 </script>
 </body>
 </html>

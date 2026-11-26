@@ -9,28 +9,31 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skill" / "strata-atlas"
 WEB = ROOT / "web"
 RELEASES = ROOT / "releases"
-VERSION = "0.2.2"
+VERSION = "0.3.0"
 
 
 def examples():
-    data = {}
-    for name in ("gpu", "robotics"):
-        src = ROOT / "examples" / (name + ".json")
-        data[name] = json.loads(src.read_text())
-        copyfile(src, SKILL / "references" / src.name)
-        run(["node", SKILL / "scripts/render.mjs", src, src.with_suffix(".svg")], check=True)
+    data = {"en": {}, "zh-CN": {}}
+    for lang, folder in (("en", Path(".")), ("zh-CN", Path("zh-CN"))):
+        for name in ("gpu", "robotics"):
+            src = ROOT / "examples" / folder / (name + ".json")
+            data[lang][name] = json.loads(src.read_text())
+            dest = SKILL / "references" / folder / src.name
+            dest.parent.mkdir(exist_ok=True)
+            copyfile(src, dest)
+            run(["node", SKILL / "scripts/render.mjs", src, src.with_suffix(".svg")], check=True)
     return data
 
 
 def build_viewer(data):
-    instruction = (SKILL / "SKILL.md").read_text().split("---", 2)[2].strip()
-    prompt = ("请用「图个明白」把我接下来给出的内容整理成一张高清拆解图。\n\n"
-              + instruction.split("## 制作与交付")[0]
-              + "\n直接按下面的字段说明提供完整 JSON，以便粘入查看器。\n\n"
-              + (SKILL / "references/format.md").read_text()
-              + "\n参考下面的有效图稿格式。主题、图形和依据按实际材料选择。\n"
-              + json.dumps(data["gpu"], ensure_ascii=False, indent=2))
-    (RELEASES / "layerlens-web-prompt.txt").write_text(prompt)
+    prompt = {}
+    for lang, suffix, intro in (
+        ("en", "", "Use LayerLens to explain the subject I provide in a single, sourced diagram. For a mechanism, trace an input through the system. For an industry, follow a deliverable between roles. State assumptions and one limiting condition. Use English unless I request another supported language. Return editable JSON using this format."),
+        ("zh-CN", ".zh-CN", "请用图个明白拆解我提供的主题。运行原理请追踪输入到输出，产业链请追踪各环节的交付物。标明依据、假设和适用条件。使用简体中文，按以下格式返回完整 JSON。"),
+    ):
+        schema = (SKILL / ("references/format" + suffix + ".md")).read_text()
+        prompt[lang] = chr(10).join([intro, schema, json.dumps(data[lang]["gpu"], ensure_ascii=False, indent=2)])
+        (RELEASES / ("layerlens-web-prompt" + suffix + ".txt")).write_text(prompt[lang])
     module = ("export const examples = " + json.dumps(data, ensure_ascii=False, indent=2)
               + ";\nexport const webPrompt = " + json.dumps(prompt, ensure_ascii=False) + ";\n")
     (WEB / "examples.mjs").write_text(module)
@@ -52,7 +55,7 @@ display_name_en: LayerLens
 description_zh: 将技术机制与产业链拆成一张有依据的高清图鉴。
 description_en: Visual teardowns of technical mechanisms and industrial value chains.
 author: LayerLens contributors
-version: "0.2.2"
+version: "0.3.0"
 """
     with ZipFile(RELEASES / f"layerlens-{VERSION}-{platform}.zip", "w", ZIP_DEFLATED) as z:
         for p in sorted(SKILL.rglob("*")):

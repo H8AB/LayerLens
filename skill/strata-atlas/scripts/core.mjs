@@ -21,52 +21,72 @@ function esc(s) {
   return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 }
 function string(v, field, max=300) {
-  if (typeof v!=='string'||!v.trim()||Array.from(v).length>max) throw Error(field+' 无效或过长');
+  if (typeof v!=='string'||!v.trim()||Array.from(v).length>max) throw Error(field+' is missing or too long');
   return v.replace(/\s+/g,' ').trim();
 }
 function list(v, field, min, max) {
-  if (!Array.isArray(v)||v.length<min||v.length>max) throw Error(field+' 数量应为 '+min+'–'+max);
+  if (!Array.isArray(v)||v.length<min||v.length>max) throw Error(field+' must contain '+min+'–'+max);
   return v;
 }
 function refs(v, total) {
-  if (!Array.isArray(v)||v.some(i=>!Number.isInteger(i)||i<1||i>total)) throw Error('依据编号与 sources 不匹配');
+  if (!Array.isArray(v)||v.some(i=>!Number.isInteger(i)||i<1||i>total)) throw Error('Reference number outside sources');
   return v;
 }
 function validate(input) {
   const s=input;
-  if (!['mechanism','industry'].includes(s?.mode)) throw Error('请选择 mechanism 或 industry');
+  if (!['mechanism','industry'].includes(s?.mode)) throw Error('Choose mechanism or industry');
   const sources=list(s.sources,'sources',0,8).map(x=>{
-    const label=string(x.label,'来源名称',65);
+    const label=string(x.label,'Source label',65);
     if (!x.url) return {label,url:''};
     let u;
-    try {u=new URL(x.url)} catch {throw Error('来源网址无效')}
-    if (!['https:','http:'].includes(u.protocol)) throw Error('来源须为网页或带页码的资料名称');
+    try {u=new URL(x.url)} catch {throw Error('Invalid source URL')}
+    if (!['https:','http:'].includes(u.protocol)) throw Error('Source URL must use HTTP or HTTPS');
     return {label,url:u.href};
   });
-  const annotation=x=>({title:string(x.title,'分析标题',80),body:string(x.body,'分析正文',300),refs:refs(x.refs,sources.length)});
-  const stages=list(s.stages,'图中对象',2,5).map(x=>{
+  const annotation=x=>({title:string(x.title,'Annotation title',80),body:string(x.body,'Annotation body',300),refs:refs(x.refs,sources.length)});
+  const stages=list(s.stages,'Stages',2,5).map(x=>{
     const v=x.visual;
     if (v?.type==='matrix') {
       const values=[v.rows,v.cols,v.lit];
-      if (!values.every(Number.isInteger)||v.rows<1||v.rows>8||v.cols<1||v.cols>32||v.lit<0||v.lit>v.rows*v.cols) throw Error('阵列行列数或高亮数量无效');
-    } else if (v?.type!=='symbol'||!Object.hasOwn(glyphs,v.symbol)) throw Error('图形类型无效');
-    return {name:string(x.name,'对象名',40),caption:string(x.caption,'图注',65),detail:string(x.detail,'图中说明',110),visual:v};
+      if (!values.every(Number.isInteger)||v.rows<1||v.rows>8||v.cols<1||v.cols>32||v.lit<0||v.lit>v.rows*v.cols) throw Error('Invalid matrix dimensions or highlight count');
+    } else if (v?.type!=='symbol'||!Object.hasOwn(glyphs,v.symbol)) throw Error('Unknown visual type');
+    return {name:string(x.name,'Stage name',40),caption:string(x.caption,'Caption',65),detail:string(x.detail,'Detail',110),visual:v};
   });
-  return {mode:s.mode,title:string(s.title,'标题',85),scope:string(s.scope,'范围',120),lead:string(s.lead,'导语',240),figure:string(s.figure,'图题',100),relation:string(s.relation,'箭头含义',24),stages,notes:list(s.notes,'分析段落',2,4).map(annotation),insight:annotation(s.insight),boundary:string(s.boundary,'适用边界',240),sources,feedback:s.feedback?string(s.feedback,'末端回传给前一环的要求',140):''};
+  const lang=s.lang || (/[\u3400-\u9fff]/.test(s.title) ? 'zh-CN' : 'en');
+  if (!['en','zh-CN'].includes(lang)) throw Error('Unsupported diagram language');
+  return {lang,mode:s.mode,title:string(s.title,'Title',85),scope:string(s.scope,'Scope',120),lead:string(s.lead,'Lead',240),figure:string(s.figure,'Figure title',100),relation:string(s.relation,'Arrow meaning',24),stages,notes:list(s.notes,'Notes',2,4).map(annotation),insight:annotation(s.insight),boundary:string(s.boundary,'Boundary',240),sources,feedback:s.feedback?string(s.feedback,'Feedback',140):''};
 }
 function text(x,y,s,size=22,fill=ink,weight=400,extra='') {
   return '<text x="'+x+'" y="'+y+'" fill="'+fill+'" font-size="'+size+'" font-weight="'+weight+'" '+extra+'>'+esc(s)+'</text>';
 }
-function lines(s,width,size) {
-  const result=[];
-  let row='', used=0;
-  for(const c of Array.from(s)) {
-    const cw=/[\x20-\x7e]/.test(c)?0.67*size:1.04*size;
-    if(used+cw>width&&row&&!/[，。；、！？）〕》]/.test(c)){result.push(row.trim());row='';used=0}
-    row+=c; used+=cw;
+function lines(value, width, size) {
+  const rows = [];
+  let row = '', used = 0;
+  // Wrap Latin words and citations together. Chinese characters can wrap individually.
+  const tokens = value.match(/\[\d+(?:,\s*\d+)*\]|[\x21-\x7e]+|[^]/gu) || [];
+  for (const token of tokens) {
+    if (!row && !token.trim()) continue;
+    let advance = 0;
+    for (const char of token) {
+      if (/[ilI.,'!|]/.test(char)) advance += 0.32;
+      else if (char === ' ') advance += 0.34;
+      else if (/[MWmw@%]/.test(char)) advance += 0.90;
+      else if (/[A-Z]/.test(char)) advance += 0.73;
+      else if (/[\x21-\x7e]/.test(char)) advance += 0.61;
+      else advance += 1.04;
+    }
+    const span = size * advance;
+    if (row && used + span > width && !/^[，。；、！？）〕》]/.test(token)) {
+      rows.push(row.trimEnd());
+      row = '';
+      used = 0;
+      if (!token.trim()) continue;
+    }
+    row += token;
+    used += span;
   }
-  if(row)result.push(row.trim());
-  return result;
+  if (row.trim()) rows.push(row.trimEnd());
+  return rows;
 }
 function para(p,x,y,s,width,size,fill=ink,weight=400,step=Math.ceil(size*1.5)) {
   for(const line of lines(s,width,size)){p.push(text(x,y,line,size,fill,weight));y+=step}
@@ -107,16 +127,17 @@ function hero(p,s,y) {
   p.push(rect(56,y,1488,end-y,diagram),...inner);
   return end;
 }
-function cite(v){return v.length?'  〔'+v.join('·')+'〕':''}
+function cite(v){return v.length?'  ['+v.join(', ')+']':''}
 export function renderSvg(input) {
   if(input?.layout==='flow'||input?.layout==='grid')return renderClassic(input);
   const s=validate(input),p=[];
-  const kind=s.mode==='mechanism'?'运行原理':'产业链条';
-  p.push(rect(56,46,8,26,'#bc7042'),text(78,67,'图个明白',22,ink,700),text(188,66,'LayerLens',15,secondary,500,'font-family="'+mono+'"'),text(1544,66,kind,20,ink,600,'text-anchor="end"'));
+  const zh=s.lang==='zh-CN';
+  const kind=s.mode==='mechanism'?(zh?'运行原理':'Technical mechanism'):(zh?'产业链条':'Industry value chain');
+  p.push(rect(56,46,8,26,'#bc7042'),text(78,67,zh?'图个明白':'LayerLens',24,ink,700),text(1544,66,kind,20,ink,600,'text-anchor="end"'));
   p.push(path('M56 91H1544','#adbbb4',1));
   let y=para(p,56,174,s.title,1475,59,ink,750);
   y=para(p,60,y-12,s.lead,1470,25,secondary);
-  y=para(p,60,y+4,'研究范围  /  '+s.scope,1460,18,'#336861',550);
+  y=para(p,60,y+4,(zh?'研究范围  /  ':'Scope  /  ')+s.scope,1460,18,'#336861',550);
   y=hero(p,s,y+15)+58;
   const w=(1488-48*(s.notes.length-1))/s.notes.length;
   let next=y;
@@ -130,19 +151,19 @@ export function renderSvg(input) {
   const takeaway=[];
   let a=para(takeaway,83,iy+44,s.insight.title,740,26,ink,700);
   a=para(takeaway,83,a+1,s.insight.body+cite(s.insight.refs),740,21,ink);
-  takeaway.push(text(915,iy+44,'适用边界',22,ink,680));
+  takeaway.push(text(915,iy+44,zh?'适用边界':'Scope and assumptions',22,ink,680));
   const b=para(takeaway,915,iy+86,s.boundary,580,21,secondary);
   y=Math.max(a,b)+10;
   p.push(rect(56,iy,1488,y-iy,'#e4ece5'),rect(56,iy,7,y-iy,'#428177'),...takeaway);
   y+=42;
-  p.push(text(56,y,'资料索引',18,ink,700));
+  p.push(text(56,y,zh?'资料索引':'Sources',18,ink,700));
   for(let i=0;i<s.sources.length;i++){
     const src=s.sources[i],x=56+(i%2)*740;
     if(i%2===0)y+=35;
     const label=text(x,y,'['+(i+1)+']   '+src.label,18,'#275e63',500);
     p.push(src.url?'<a href="'+esc(src.url)+'" xlink:href="'+esc(src.url)+'">'+label+'</a>':label);
   }
-  if(!s.sources.length)p.push(text(170,y,'概念示意，未附外部引文',17,secondary));
+  if(!s.sources.length)p.push(text(170,y,zh?'概念示意，未附外部引文':'Concept illustration without external references',17,secondary));
   const height=y+35,width=1600;
   const svg='<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="'+height+'" viewBox="0 0 1600 '+height+'" role="img" aria-labelledby="t d"><title id="t">'+esc(s.title)+'</title><desc id="d">'+esc(s.lead)+'</desc>'+rect(0,0,width,height,pale)+'<g font-family="PingFang SC,Microsoft YaHei,Noto Sans CJK SC,Arial,sans-serif">'+p.join('')+'</g></svg>';
   return {svg,width,height,spec:s};
