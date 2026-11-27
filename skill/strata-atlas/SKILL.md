@@ -6,7 +6,7 @@ license: MIT
 
 # LayerLens
 
-Create one zoomable SVG diagram and its editable JSON. Use English by default. When the user asks for Chinese, set `lang` to `zh-CN` and write the full diagram in Simplified Chinese.
+Create one zoomable SVG diagram. Show the diagram and explain how to read it before offering the editable JSON as optional handoff material. Use English by default. When the user asks for Chinese, set `lang` to `zh-CN` and write the full diagram in Simplified Chinese.
 
 ## Build the explanation
 
@@ -20,4 +20,6 @@ Create one zoomable SVG diagram and its editable JSON. Use English by default. W
 
 Use the [diagram format](references/format.md) and the [GPU](references/gpu.json) or [robotics](references/robotics.json) example. For Chinese output, see the [Chinese format notes](references/format.zh-CN.md).
 
-Run `node <skill-folder>/scripts/render.mjs input.json output.svg` with Node.js 18+. Inspect the exported diagram for consistency of counts, arrow meanings, references, and line wrapping. Deliver the image and editable JSON. If the host can only return text, supply valid JSON for the offline viewer. On revisions, retain the source evidence and all unaffected content.
+Run `node <skill-folder>/scripts/render.mjs input.json output.svg` with Node.js 18+. Inspect the exported diagram for consistency of counts, arrow meanings, references, and line wrapping. Deliver the image first with a plain-language reading guide; include editable JSON only when useful for further editing. If the host can only return text, explain the topic clearly before supplying viewer data. On revisions, retain the source evidence and all unaffected content.
+
+Public examples and trial suggestions must use fictional or public information, never a user's account details, chat history, private files, contacts, or local paths. Check the image and attachments before sharing.
